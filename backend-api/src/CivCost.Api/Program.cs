@@ -26,7 +26,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-var id = Guid.CreateVersion7();
-Console.WriteLine(id);
-
 app.Run();
