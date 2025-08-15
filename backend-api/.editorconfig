@@ -92,6 +92,7 @@ dotnet_style_readonly_field = true:suggestion
 # Code analysis preferences
 dotnet_diagnostic.CA1062.severity = suggestion
 dotnet_diagnostic.CS8618.severity = suggestion
+dotnet_diagnostic.CA1812.severity = suggestion
 
 # Expression-level preferences
 dotnet_style_object_initializer = true:suggestion
