@@ -95,6 +95,7 @@ dotnet_diagnostic.CS8618.severity = suggestion
 dotnet_diagnostic.CA1812.severity = suggestion
 dotnet_diagnostic.CA1707.severity = suggestion
 dotnet_diagnostic.CA1515.severity = suggestion
+dotnet_diagnostic.CA2007.severity = suggestion
 
 # Expression-level preferences
 dotnet_style_object_initializer = true:suggestion

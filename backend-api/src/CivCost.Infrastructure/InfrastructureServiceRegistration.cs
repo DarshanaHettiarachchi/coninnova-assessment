@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CivCost.Domain.PurchaseOrders;
+using CivCost.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +11,8 @@ public static class InfrastructureServiceRegistration
     {
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("CivCostDb")));
+
+        services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
 
         return services;
     }

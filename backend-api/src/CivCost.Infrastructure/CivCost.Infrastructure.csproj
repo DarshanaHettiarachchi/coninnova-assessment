@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CivCost.Application\CivCost.Application.csproj" />
+    <ProjectReference Include="..\CivCost.Domain\CivCost.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
