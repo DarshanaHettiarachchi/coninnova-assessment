@@ -80,6 +80,18 @@ public class PurchaseOrder : Entity
         Status = PurchaseOrderStatus.Cancelled;
         return Result.Success();
     }
+
+    public Result Update(string description, Money totalAmount, DateTime orderDate)
+    {
+        if (Status != PurchaseOrderStatus.Draft)
+            return Result.Failure(PurchaseOrderErrors.CannotUpdate);
+
+        Description = description;
+        OrderDate = orderDate;
+        TotalAmount = totalAmount;
+
+        return Result.Success();
+    }
 }
 
 public enum PurchaseOrderStatus

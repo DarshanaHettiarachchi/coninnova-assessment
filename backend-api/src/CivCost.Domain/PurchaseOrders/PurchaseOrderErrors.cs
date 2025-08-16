@@ -12,4 +12,9 @@ public static class PurchaseOrderErrors
         "PurchaseOrder.CannotCancel",
         "Only draft or approved POs can be cancelled"
     );
+
+    public static readonly Error CannotUpdate = new(
+        "PurchaseOrder.CannotUpdate",
+        "Only draft  POs can be cancelled"
+    );
 }
