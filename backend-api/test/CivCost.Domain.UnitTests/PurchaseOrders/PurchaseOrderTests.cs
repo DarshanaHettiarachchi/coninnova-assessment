@@ -46,4 +46,52 @@ public class PurchaseOrderTests
         po.Status.Should().Be(status);
     }
 
+    [Theory]
+    [InlineData(PurchaseOrderStatus.Draft)]
+    [InlineData(PurchaseOrderStatus.Approved)]
+    public void Cancel_Should_ReturnSuccess_ForDraftOrApprovedStatuses(PurchaseOrderStatus status)
+    {
+        // Arrange
+        var po = PurchaseOrder.Create(
+            poNumber: "PO-001",
+            description: "Test PO",
+            orderDate: DateTime.UtcNow,
+            totalAmount: new Money(100m),
+            status: status,
+            supplierId: Guid.NewGuid()
+        );
+
+        // Act
+        var result = po.Cancel();
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        po.Status.Should().Be(PurchaseOrderStatus.Cancelled);
+    }
+
+    [Theory]
+    [InlineData(PurchaseOrderStatus.Shipped)]
+    [InlineData(PurchaseOrderStatus.Completed)]
+    [InlineData(PurchaseOrderStatus.Cancelled)]
+    public void Cancel_Should_ReturnFailure_ForNonDraftOrApprovedStatuses(PurchaseOrderStatus status)
+    {
+        // Arrange
+        var po = PurchaseOrder.Create(
+            poNumber: "PO-002",
+            description: "Test PO",
+            orderDate: DateTime.UtcNow,
+            totalAmount: new Money(100m),
+            status: status,
+            supplierId: Guid.NewGuid()
+        );
+
+        // Act
+        var result = po.Cancel();
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().Be(PurchaseOrderErrors.CannotCancelNonDraftOrShipped);
+        po.Status.Should().Be(status); // Status remains unchanged
+    }
+
 }

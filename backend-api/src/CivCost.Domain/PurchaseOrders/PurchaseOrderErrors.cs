@@ -5,5 +5,11 @@ public static class PurchaseOrderErrors
 {
     public static readonly Error NotApproved = new(
       "Booking.NotApproved",
-      "Only Draft orders can be approved.");
+      "Only Draft orders can be approved."
+    );
+
+    public static readonly Error CannotCancelNonDraftOrShipped = new(
+        "PurchaseOrder.CannotCancel",
+        "Only draft or approved POs can be cancelled"
+    );
 }

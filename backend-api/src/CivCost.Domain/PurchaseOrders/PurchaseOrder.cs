@@ -71,6 +71,15 @@ public class PurchaseOrder : Entity
 
         return Result.Success();
     }
+
+    public Result Cancel()
+    {
+        if (Status != PurchaseOrderStatus.Draft && Status != PurchaseOrderStatus.Approved)
+            return Result.Failure(PurchaseOrderErrors.CannotCancelNonDraftOrShipped);
+
+        Status = PurchaseOrderStatus.Cancelled;
+        return Result.Success();
+    }
 }
 
 public enum PurchaseOrderStatus
