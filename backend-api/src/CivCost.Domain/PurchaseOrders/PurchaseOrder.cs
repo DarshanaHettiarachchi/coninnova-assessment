@@ -20,6 +20,7 @@ public class PurchaseOrder : Entity
         OrderDate = orderDate;
         TotalAmount = totalAmount;
         Status = status;
+        SupplierId = supplierId;
     }
 
     //For EFcore
