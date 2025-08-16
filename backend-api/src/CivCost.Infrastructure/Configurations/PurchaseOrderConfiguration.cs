@@ -12,6 +12,12 @@ internal sealed class PurchaseOrderConfiguration : IEntityTypeConfiguration<Purc
 
         builder.HasKey(po => po.Id);
 
+        builder.Property(u => u.PoNumber)
+               .HasMaxLength(20)
+               .IsUnicode(false);
+
+        builder.HasIndex(po => po.PoNumber).IsUnique();
+
         builder.OwnsOne(po => po.TotalAmount, money =>
         {
             money.Property(m => m.Amount).HasPrecision(18, 2);
