@@ -2,4 +2,5 @@
 
 public interface IPurchaseOrderNumberGenerator
 {
+    Task<string> GenerateAsync(CancellationToken cancellationToken = default);
 }
