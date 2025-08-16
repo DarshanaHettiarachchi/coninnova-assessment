@@ -2,8 +2,8 @@
 
 public sealed record Money
 {
-    public decimal Amount { get; init; }
-    public string Currency { get; init; }
+    public decimal Amount { get; }
+    public string Currency { get; }
 
     public Money(decimal amount, string currency = "EUR")
     {
@@ -16,3 +16,5 @@ public sealed record Money
 
     public override string ToString() => $"{Amount:0.00} {Currency}";
 }
+
+
