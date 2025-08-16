@@ -98,6 +98,11 @@ dotnet_diagnostic.CA1515.severity = suggestion
 dotnet_diagnostic.CA2007.severity = suggestion
 dotnet_diagnostic.CA1040.severity = suggestion
 
+# Match all C# files in any Migrations folder
+[**/Migrations/*.cs]
+# Treat them as generated code
+generated_code = true
+
 # Expression-level preferences
 dotnet_style_object_initializer = true:suggestion
 dotnet_style_collection_initializer = true:suggestion
