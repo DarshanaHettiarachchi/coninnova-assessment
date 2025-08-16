@@ -24,3 +24,24 @@ dotnet ef database update `
   --project . `
   --startup-project ..\CivCost.Api
 
+
+   public partial class AddPurchaseOrderSequence : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            // Create the SQL Server sequence
+            migrationBuilder.Sql(@"
+                CREATE SEQUENCE PurchaseOrderSeq
+                START WITH 1
+                INCREMENT BY 1;
+            ");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            // Drop the sequence if rolling back
+            migrationBuilder.Sql("DROP SEQUENCE PurchaseOrderSeq;");
+        }
+    }
