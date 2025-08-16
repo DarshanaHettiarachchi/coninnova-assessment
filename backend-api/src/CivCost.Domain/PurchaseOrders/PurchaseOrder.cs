@@ -52,6 +52,25 @@ public class PurchaseOrder : Entity
             supplierId
         );
     }
+
+    /// <summary>
+    /// Approves the purchase order if it is in <see cref="PurchaseOrderStatus.Draft"/> status.  
+    /// </summary>
+    /// <returns>
+    /// A <see cref="Result"/> indicating success if the order was approved,  
+    /// or failure with a corresponding error if approval is not allowed.
+    /// </returns>
+    public Result Approve()
+    {
+        if (Status != PurchaseOrderStatus.Draft)
+        {
+            return Result.Failure(PurchaseOrderErrors.NotApproved);
+        }
+
+        Status = PurchaseOrderStatus.Approved;
+
+        return Result.Success();
+    }
 }
 
 public enum PurchaseOrderStatus
