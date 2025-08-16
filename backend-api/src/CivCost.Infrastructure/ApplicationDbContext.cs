@@ -1,10 +1,11 @@
-﻿using CivCost.Domain.PurchaseOrders;
+﻿using CivCost.Domain.Abstractions;
+using CivCost.Domain.PurchaseOrders;
 using CivCost.Domain.Suppliers;
 using Microsoft.EntityFrameworkCore;
 
 namespace CivCost.Infrastructure;
 
-public sealed class ApplicationDbContext : DbContext
+public sealed class ApplicationDbContext : DbContext, IUnitOfWork
 {
     public DbSet<Supplier> Suppliers { get; private set; }
 
