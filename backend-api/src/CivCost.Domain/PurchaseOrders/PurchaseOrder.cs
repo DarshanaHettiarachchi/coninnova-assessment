@@ -8,7 +8,7 @@ public class PurchaseOrder : Entity
         Guid id,
         string poNumber,
         string description,
-        DateTime orderDate,
+        DateOnly orderDate,
         Money totalAmount,
         PurchaseOrderStatus status,
         Guid supplierId
@@ -27,7 +27,7 @@ public class PurchaseOrder : Entity
 
     public string PoNumber { get; private set; }
     public string Description { get; private set; }
-    public DateTime OrderDate { get; private set; }
+    public DateOnly OrderDate { get; private set; }
     public Money TotalAmount { get; private set; }
     public PurchaseOrderStatus Status { get; private set; }
     public Guid SupplierId { get; private set; }
@@ -35,7 +35,7 @@ public class PurchaseOrder : Entity
     public static PurchaseOrder Create(
         string poNumber,
         string description,
-        DateTime orderDate,
+        DateOnly orderDate,
         Money totalAmount,
         PurchaseOrderStatus status,
         Guid supplierId
@@ -81,7 +81,7 @@ public class PurchaseOrder : Entity
         return Result.Success();
     }
 
-    public Result Update(string description, Money totalAmount, DateTime orderDate)
+    public Result Update(string description, Money totalAmount, DateOnly orderDate)
     {
         if (Status != PurchaseOrderStatus.Draft)
             return Result.Failure(PurchaseOrderErrors.CannotUpdate);

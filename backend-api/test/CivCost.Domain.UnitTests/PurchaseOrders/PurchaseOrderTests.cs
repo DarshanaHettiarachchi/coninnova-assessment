@@ -10,7 +10,7 @@ public class PurchaseOrderTests
         var po = PurchaseOrder.Create(
             poNumber: "PO-001",
             description: "Test PO",
-            orderDate: DateTime.UtcNow,
+            orderDate: DateOnly.FromDateTime(DateTime.Today),
             totalAmount: new Money(100m),
             status: PurchaseOrderStatus.Draft,
             supplierId: Guid.NewGuid()
@@ -33,7 +33,7 @@ public class PurchaseOrderTests
         var po = PurchaseOrder.Create(
             poNumber: "PO-002",
             description: "Test PO",
-            orderDate: DateTime.UtcNow,
+            orderDate: DateOnly.FromDateTime(DateTime.Today),
             totalAmount: new Money(100m),
             status: status,
             supplierId: Guid.NewGuid()
@@ -55,7 +55,7 @@ public class PurchaseOrderTests
         var po = PurchaseOrder.Create(
             poNumber: "PO-001",
             description: "Test PO",
-            orderDate: DateTime.UtcNow,
+            orderDate: DateOnly.FromDateTime(DateTime.Today),
             totalAmount: new Money(100m),
             status: status,
             supplierId: Guid.NewGuid()
@@ -79,7 +79,7 @@ public class PurchaseOrderTests
         var po = PurchaseOrder.Create(
             poNumber: "PO-002",
             description: "Test PO",
-            orderDate: DateTime.UtcNow,
+            orderDate: DateOnly.FromDateTime(DateTime.Today),
             totalAmount: new Money(100m),
             status: status,
             supplierId: Guid.NewGuid()
