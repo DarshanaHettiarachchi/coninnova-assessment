@@ -19,6 +19,30 @@ public sealed class ApplicationDbContext : DbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
+        modelBuilder.Entity<Supplier>().HasData(
+            Supplier.Create(
+               name: "Supplier one",
+               email: "suplierone@email.com",
+               phone: "07712345567"
+            )
+        );
+
+        modelBuilder.Entity<Supplier>().HasData(
+            Supplier.Create(
+               name: "Supplier Two",
+               email: "supliertwo@email.com",
+               phone: "07712345568"
+            )
+        );
+
+        modelBuilder.Entity<Supplier>().HasData(
+            Supplier.Create(
+               name: "Supplier Three",
+               email: "suplierthree@email.com",
+               phone: "07712345569"
+            )
+        );
+
         base.OnModelCreating(modelBuilder);
     }
 

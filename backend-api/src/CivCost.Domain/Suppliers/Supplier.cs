@@ -25,13 +25,12 @@ public class Supplier : Entity
     public string Phone { get; private set; }
 
     public static Supplier Create(
-        Guid id,
         string name,
         string email,
         string phone
     )
     {
-        return new Supplier(id, name, email, phone);
+        return new Supplier(Guid.NewGuid(), name, email, phone);
     }
 
 }
