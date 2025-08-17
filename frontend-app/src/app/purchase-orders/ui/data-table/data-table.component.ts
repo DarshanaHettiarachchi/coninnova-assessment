@@ -7,11 +7,12 @@ import {
 } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatSortModule, Sort } from '@angular/material/sort';
+import { MatSortModule, Sort, SortDirection } from '@angular/material/sort';
 
 export interface ColumnDef<T> {
   key: Extract<keyof T, string>;
   label: string;
+  sortable?: boolean;
   cell?: (row: T) => string | number | Date;
 }
 @Component({
@@ -27,6 +28,8 @@ export class DataTableComponent<T> {
   totalItems = input.required<number>(); // Total items from server
   pageSize = input(10);
   pageIndex = input(0);
+  sortActive = input<Extract<keyof T, string> | ''>('');
+  sortDirection = input<SortDirection>('asc');
 
   pageChange = output<PageEvent>();
   sortChange = output<Sort>();
