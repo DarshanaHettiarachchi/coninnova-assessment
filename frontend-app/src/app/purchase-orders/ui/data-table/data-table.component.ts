@@ -8,6 +8,7 @@ import {
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule, Sort, SortDirection } from '@angular/material/sort';
+import { MatCardModule } from '@angular/material/card';
 
 export interface ColumnDef<T> {
   key: Extract<keyof T, string>;
@@ -17,7 +18,7 @@ export interface ColumnDef<T> {
 }
 @Component({
   selector: 'app-data-table',
-  imports: [MatTableModule, MatSortModule, MatPaginatorModule],
+  imports: [MatTableModule, MatSortModule, MatPaginatorModule, MatCardModule],
   templateUrl: './data-table.component.html',
   styleUrl: './data-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

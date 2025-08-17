@@ -12,10 +12,11 @@ import {
   PurchaseOrderQuery,
 } from '../data-access/purchase-order-query.model';
 import { DataFiltersComponent } from '../ui/data-filters/data-filters.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-purchase-orders',
-  imports: [DataTableComponent, DataFiltersComponent],
+  imports: [DataTableComponent, DataFiltersComponent, MatButtonModule],
   templateUrl: './purchase-orders.component.html',
   styleUrl: './purchase-orders.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
