@@ -1,5 +1,6 @@
 <p>purchase-orders works!</p>
 
+<app-data-filters (filterChange)="onFilterChange($event)"></app-data-filters>
 <app-data-table
   [data]="orders()"
   [columns]="columns"

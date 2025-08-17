@@ -89,12 +89,20 @@ export class PurchaseOrderDataService {
     }));
   }
 
+  setFilter(filter: Partial<PurchaseOrderQuery>) {
+    this.purchaseOrderQuery.update((query) => ({
+      ...query,
+      ...filter,
+    }));
+  }
+
   private fetchPurchaseOrders(
     query: PurchaseOrderQuery
   ): Observable<Result<PaginatedResponse<PurchaseOrder>>> {
     return this.http
       .get<PaginatedResponse<PurchaseOrderJson>>(this.BASE_URL, {
         params: {
+          status: query.status,
           page: query.page,
           pageSize: query.pageSize,
           sortBy: query.sortBy,
