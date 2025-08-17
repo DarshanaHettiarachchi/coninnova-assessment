@@ -1,4 +1,5 @@
-﻿using CivCost.Application.PurchaseOrders.AddPurchaseOrder;
+﻿using CivCost.Application.Common;
+using CivCost.Application.PurchaseOrders.AddPurchaseOrder;
 using CivCost.Application.PurchaseOrders.GetPurchaseOrders;
 using CivCost.Domain.Abstractions;
 using MediatR;
@@ -32,7 +33,7 @@ public class PurchaseOrderController : ControllerBase
             PageSize: request.PageSize
         );
 
-        Result<IReadOnlyList<PurchaseOrderResponse>> result = await _sender.Send(query, cancellationToken);
+        Result<PaginatedResult<PurchaseOrderResponse>> result = await _sender.Send(query, cancellationToken);
         return Ok(result.Value);
     }
 
