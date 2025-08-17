@@ -1,4 +1,5 @@
 ﻿using CivCost.Application.PurchaseOrders.AddPurchaseOrder;
+using CivCost.Application.PurchaseOrders.GetPurchaseOrders;
 using CivCost.Domain.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,24 @@ public class PurchaseOrderController : ControllerBase
     public PurchaseOrderController(ISender sender)
     {
         _sender = sender;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetPurchaseOrders([FromQuery] GetPurchaseOrdersRequest request, CancellationToken cancellationToken)
+    {
+        var query = new GetPurchaseOrdersQuery(
+            SupplierId: request.SupplierId,
+            Status: request.Status,
+            FromDate: request.FromDate,
+            ToDate: request.ToDate,
+            SortBy: request.SortBy,
+            SortDirection: request.SortDirection,
+            Page: request.Page,
+            PageSize: request.PageSize
+        );
+
+        Result<IReadOnlyList<PurchaseOrderResponse>> result = await _sender.Send(query, cancellationToken);
+        return Ok(result.Value);
     }
 
     [HttpPost]
