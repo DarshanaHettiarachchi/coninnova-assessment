@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CivCost.Api.Controllers.PurchaseOrders;
 
-[Route("api/[controller]")]
+[Route("api/purchase-orders")]
 [ApiController]
 public class PurchaseOrderController : ControllerBase
 {
