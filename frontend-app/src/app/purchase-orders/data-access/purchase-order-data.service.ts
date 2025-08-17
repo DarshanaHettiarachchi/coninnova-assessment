@@ -3,12 +3,17 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { catchError, map, Observable, of, switchMap, tap } from 'rxjs';
 import { Result } from '../../shared/result.model';
 import { PaginatedResponse } from '../../shared/paginated-response.model';
-import { PurchaseOrder, PurchaseOrderJson } from './purchase-order.model';
+import {
+  PurchaseOrder,
+  PurchaseOrderJson,
+  PurchaseOrderTableRow,
+} from './purchase-order.model';
 import {
   DEFAULT_PURCHASE_ORDER_QUERY,
   PurchaseOrderQuery,
 } from './purchase-order-query.model';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { SortDirection } from '@angular/material/sort';
 
 @Injectable({
   providedIn: 'root',
@@ -57,11 +62,30 @@ export class PurchaseOrderDataService {
       : 0;
   });
 
+  sortBy = computed(() => {
+    return this.purchaseOrderQuery().sortBy;
+  });
+
+  sortDirection = computed(() => {
+    return this.purchaseOrderQuery().sortDirection;
+  });
+
   setPaging(pageIndex: number, pageSize: number) {
     this.purchaseOrderQuery.update((query) => ({
       ...query,
       page: pageIndex + 1,
       pageSize: pageSize,
+    }));
+  }
+
+  setSorting(
+    sortBy: keyof PurchaseOrderTableRow,
+    sortDirection: SortDirection
+  ) {
+    this.purchaseOrderQuery.update((query) => ({
+      ...query,
+      sortBy: sortBy,
+      sortDirection: sortDirection,
     }));
   }
 
@@ -73,6 +97,8 @@ export class PurchaseOrderDataService {
         params: {
           page: query.page,
           pageSize: query.pageSize,
+          sortBy: query.sortBy,
+          sortDirection: query.sortDirection,
         },
       })
       .pipe(

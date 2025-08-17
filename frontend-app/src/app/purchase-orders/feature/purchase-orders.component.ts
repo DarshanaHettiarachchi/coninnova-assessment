@@ -4,9 +4,10 @@ import {
   DataTableComponent,
 } from '../ui/data-table/data-table.component';
 import { PageEvent } from '@angular/material/paginator';
-import { Sort } from '@angular/material/sort';
+import { Sort, SortDirection } from '@angular/material/sort';
 import { PurchaseOrderTableRow } from '../data-access/purchase-order.model';
 import { PurchaseOrderDataService } from '../data-access/purchase-order-data.service';
+import { DEFAULT_PURCHASE_ORDER_QUERY } from '../data-access/purchase-order-query.model';
 
 @Component({
   selector: 'app-purchase-orders',
@@ -16,28 +17,36 @@ import { PurchaseOrderDataService } from '../data-access/purchase-order-data.ser
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PurchaseOrdersComponent {
-  private todoDataService = inject(PurchaseOrderDataService);
+  private purchaseOrderDataService = inject(PurchaseOrderDataService);
 
-  orders = this.todoDataService.purchaseOrderTableRows;
-  totalItems = this.todoDataService.totalItems;
-  pageSize = this.todoDataService.pageSize;
-  pageIndex = this.todoDataService.pageIndex;
+  orders = this.purchaseOrderDataService.purchaseOrderTableRows;
+  totalItems = this.purchaseOrderDataService.totalItems;
+  pageSize = this.purchaseOrderDataService.pageSize;
+  pageIndex = this.purchaseOrderDataService.pageIndex;
 
   columns: ColumnDef<PurchaseOrderTableRow>[] = [
-    { key: 'poNumber', label: '#' },
-    { key: 'description', label: 'Title' },
+    { key: 'poNumber', label: '#', sortable: true },
+    { key: 'description', label: 'Description' },
     { key: 'supplier', label: 'Supplier' },
-    { key: 'totalAmount', label: 'Total Amount' },
-    { key: 'orderDate', label: 'Order Date' },
+    { key: 'totalAmount', label: 'Total Amount', sortable: true },
+    { key: 'orderDate', label: 'Order Date', sortable: true },
     { key: 'status', label: 'State' },
   ];
 
+  sortActive: keyof PurchaseOrderTableRow =
+    DEFAULT_PURCHASE_ORDER_QUERY.sortBy as keyof PurchaseOrderTableRow;
+  sortDirection: SortDirection = DEFAULT_PURCHASE_ORDER_QUERY.sortDirection;
+
   onPageChange(event: PageEvent) {
     console.log('page event:', event);
-    this.todoDataService.setPaging(event.pageIndex, event.pageSize);
+    this.purchaseOrderDataService.setPaging(event.pageIndex, event.pageSize);
   }
 
   onSortChange(event: Sort) {
     console.log('Sort event:', event);
+    this.purchaseOrderDataService.setSorting(
+      event.active as keyof PurchaseOrderTableRow,
+      event.direction
+    );
   }
 }

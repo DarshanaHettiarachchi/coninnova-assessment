@@ -4,6 +4,8 @@
   [data]="orders()"
   [columns]="columns"
   [totalItems]="totalItems()"
+  [sortActive]="sortActive"
+  [sortDirection]="sortDirection"
   (pageChange)="onPageChange($event)"
   (sortChange)="onSortChange($event)"
 ></app-data-table>
