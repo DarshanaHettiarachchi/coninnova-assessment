@@ -52,16 +52,18 @@ internal sealed class GetPurchaseOrdersQueryHandler : IQueryHandler<GetPurchaseO
             _ => query.OrderBy(po => po.PoNumber)
         };
 
+        var count = await query.CountAsync(cancellationToken);
+
         //Paging
         query = query
             .Skip((request.Page - 1) * request.PageSize)
             .Take(request.PageSize);
 
         //This is more effiecent for this use case rather than using navigatin properties and includes
+        //selects only requreid coloumns
         //And as per the current requirements and assumptions No need of a navigation property for Supplier
         //So DDD guide lines are respected
         var purchaseOrders = await query
-            .AsNoTracking()
             .Join(
                 _context.Suppliers,
                 po => po.SupplierId,
@@ -83,7 +85,6 @@ internal sealed class GetPurchaseOrdersQueryHandler : IQueryHandler<GetPurchaseO
             )
             .ToListAsync(cancellationToken);
 
-        var count = purchaseOrders.Count;
         //round up partial pages 
         var totalPages = (count + request.PageSize - 1) / request.PageSize;
 
