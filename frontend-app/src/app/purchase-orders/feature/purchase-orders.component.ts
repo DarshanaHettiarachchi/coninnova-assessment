@@ -1,17 +1,12 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   ColumnDef,
   DataTableComponent,
 } from '../ui/data-table/data-table.component';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
-
-interface PurchaseOrder {
-  number: number;
-  title: string;
-  state: string;
-  created_at: Date;
-}
+import { PurchaseOrderTableRow } from '../data-access/purchase-order.model';
+import { PurchaseOrderDataService } from '../data-access/purchase-order-data.service';
 
 @Component({
   selector: 'app-purchase-orders',
@@ -21,50 +16,28 @@ interface PurchaseOrder {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PurchaseOrdersComponent {
-  orders = signal<PurchaseOrder[]>([]);
-  totalItems = signal(0);
-  pageSize = signal(10);
-  pageIndex = signal(0);
+  private todoDataService = inject(PurchaseOrderDataService);
 
-  columns: ColumnDef<PurchaseOrder>[] = [
-    { key: 'number', label: '#' },
-    { key: 'title', label: 'Title' },
-    { key: 'state', label: 'State' },
-    {
-      key: 'created_at',
-      label: 'Created',
-      cell: (row) => new Intl.DateTimeFormat().format(new Date(row.created_at)),
-    },
+  orders = this.todoDataService.purchaseOrderTableRows;
+  totalItems = this.todoDataService.totalItems;
+  pageSize = this.todoDataService.pageSize;
+  pageIndex = this.todoDataService.pageIndex;
+
+  columns: ColumnDef<PurchaseOrderTableRow>[] = [
+    { key: 'poNumber', label: '#' },
+    { key: 'description', label: 'Title' },
+    { key: 'supplier', label: 'Supplier' },
+    { key: 'totalAmount', label: 'Total Amount' },
+    { key: 'orderDate', label: 'Order Date' },
+    { key: 'status', label: 'State' },
   ];
 
-  ngOnInit() {
-    this.fetchData(0, 10, null);
-  }
-
   onPageChange(event: PageEvent) {
-    this.pageIndex.set(event.pageIndex);
-    this.pageSize.set(event.pageSize);
-    this.fetchData(event.pageIndex, event.pageSize, null);
+    console.log('page event:', event);
+    this.todoDataService.setPaging(event.pageIndex, event.pageSize);
   }
 
   onSortChange(event: Sort) {
-    this.fetchData(this.pageIndex(), this.pageSize(), event);
-  }
-
-  fetchData(pageIndex: number, pageSize: number, sort: Sort | null) {
-    const allOrders: PurchaseOrder[] = Array.from({ length: 200 }).map(
-      (_, i) => ({
-        number: i + 1,
-        title: `Order ${i + 1}`,
-        state: i % 2 === 0 ? 'Open' : 'Closed',
-        created_at: new Date(),
-      })
-    );
-
-    const start = pageIndex * pageSize;
-    const paged = allOrders.slice(start, start + pageSize);
-
-    this.orders.set(paged);
-    this.totalItems.set(allOrders.length);
+    console.log('Sort event:', event);
   }
 }
