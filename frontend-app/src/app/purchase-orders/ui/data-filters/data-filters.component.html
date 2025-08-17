@@ -1,5 +1,5 @@
 <mat-card class="card" appearance="outlined">
-  <mat-card-content>
+  <mat-card-content class="card-content">
     <form [formGroup]="form">
       <div class="form-control">
         <label>Status</label>
@@ -11,5 +11,6 @@
         </select>
       </div>
     </form>
+    <button mat-flat-button matButton="filled" (click)="onAddPO()">Add</button>
   </mat-card-content>
 </mat-card>

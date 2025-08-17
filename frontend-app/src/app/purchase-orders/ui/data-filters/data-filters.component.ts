@@ -36,6 +36,8 @@ export class DataFiltersComponent {
 
   filterChange = output<Partial<PurchaseOrderQuery>>();
 
+  addPO = output();
+
   filterValues = toSignal(this.form.valueChanges);
 
   constructor() {
@@ -50,5 +52,9 @@ export class DataFiltersComponent {
         } as Partial<PurchaseOrderQuery>);
       }
     });
+  }
+
+  onAddPO() {
+    this.addPO.emit();
   }
 }

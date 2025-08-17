@@ -62,4 +62,8 @@ export class PurchaseOrdersComponent {
       ...$event,
     });
   }
+
+  onAddPO() {
+    console.log('Add Purchase Order button clicked');
+  }
 }
