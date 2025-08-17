@@ -1,1 +1,9 @@
 <p>purchase-orders works!</p>
+
+<app-data-table
+  [data]="orders()"
+  [columns]="columns"
+  [totalItems]="totalItems()"
+  (pageChange)="onPageChange($event)"
+  (sortChange)="onSortChange($event)"
+></app-data-table>
