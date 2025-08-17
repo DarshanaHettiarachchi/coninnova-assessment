@@ -45,9 +45,9 @@ internal sealed class GetPurchaseOrdersQueryHandler : IQueryHandler<GetPurchaseO
                 ? query.OrderBy(po => po.OrderDate)
                 : query.OrderByDescending(po => po.OrderDate),
 
-            "STATUS" => request.SortDirection == SortDirection.Asc
-                ? query.OrderBy(po => po.Status)
-                : query.OrderByDescending(po => po.Status),
+            "TOTALAMOUNT" => request.SortDirection == SortDirection.Asc
+                ? query.OrderBy(po => po.TotalAmount.Amount)
+                : query.OrderByDescending(po => po.TotalAmount.Amount),
 
             _ => query.OrderBy(po => po.PoNumber)
         };
