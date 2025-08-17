@@ -46,7 +46,7 @@ export class DataFiltersComponent {
           status:
             PurchaseOrderStatus[
               values.status as keyof typeof PurchaseOrderStatus
-            ],
+            ] || '',
         } as Partial<PurchaseOrderQuery>);
       }
     });
