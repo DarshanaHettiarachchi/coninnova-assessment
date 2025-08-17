@@ -1,6 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { catchError, map, Observable, of, switchMap, tap } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  map,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { Result } from '../../shared/result.model';
 import { PaginatedResponse } from '../../shared/paginated-response.model';
 import {
@@ -27,6 +35,7 @@ export class PurchaseOrderDataService {
   );
 
   private purchaseOrderResponse$ = toObservable(this.purchaseOrderQuery).pipe(
+    debounceTime(300),
     switchMap(() => {
       return this.fetchPurchaseOrders(this.purchaseOrderQuery());
     })
