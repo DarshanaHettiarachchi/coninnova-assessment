@@ -1,11 +1,12 @@
-﻿using CivCost.Domain.Abstractions;
+﻿using CivCost.Application.Abstractions;
+using CivCost.Domain.Abstractions;
 using CivCost.Domain.PurchaseOrders;
 using CivCost.Domain.Suppliers;
 using Microsoft.EntityFrameworkCore;
 
 namespace CivCost.Infrastructure;
 
-public sealed class ApplicationDbContext : DbContext, IUnitOfWork
+public sealed class ApplicationDbContext : DbContext, IUnitOfWork, IApplicationDbContext
 {
     public DbSet<Supplier> Suppliers { get; private set; }
 
@@ -18,7 +19,10 @@ public sealed class ApplicationDbContext : DbContext, IUnitOfWork
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
+        modelBuilder.HasSequence("PurchaseOrderSeq");
 
         modelBuilder.Entity<Supplier>().HasData(
              new

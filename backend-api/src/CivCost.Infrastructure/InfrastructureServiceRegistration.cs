@@ -1,5 +1,7 @@
-﻿using CivCost.Domain.Abstractions;
+﻿using CivCost.Application.Abstractions;
+using CivCost.Domain.Abstractions;
 using CivCost.Domain.PurchaseOrders;
+using CivCost.Domain.Suppliers;
 using CivCost.Infrastructure.Repositories;
 using CivCost.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +18,11 @@ public static class InfrastructureServiceRegistration
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
+        services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
+
         services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
+
+        services.AddScoped<ISupplierRepository, SupplierRepository>();
 
         services.AddScoped<IPurchaseOrderNumberGenerator, PurchaseOrderNumberGenerator>();
 
