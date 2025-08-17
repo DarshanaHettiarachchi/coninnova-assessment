@@ -1,4 +1,5 @@
 ﻿using CivCost.Application.Abstractions;
+using CivCost.Application.Common;
 using CivCost.Domain.PurchaseOrders;
 
 namespace CivCost.Application.PurchaseOrders.GetPurchaseOrders;
@@ -18,4 +19,4 @@ public sealed record GetPurchaseOrdersQuery(
     SortDirection SortDirection = SortDirection.Asc,
     int Page = 1,
     int PageSize = 10
-) : IQuery<IReadOnlyList<PurchaseOrderResponse>>;
+) : IQuery<PaginatedResult<PurchaseOrderResponse>>;

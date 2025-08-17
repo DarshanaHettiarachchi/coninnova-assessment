@@ -1,9 +1,10 @@
 ﻿using CivCost.Application.Abstractions;
+using CivCost.Application.Common;
 using CivCost.Domain.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CivCost.Application.PurchaseOrders.GetPurchaseOrders;
-internal sealed class GetPurchaseOrdersQueryHandler : IQueryHandler<GetPurchaseOrdersQuery, IReadOnlyList<PurchaseOrderResponse>>
+internal sealed class GetPurchaseOrdersQueryHandler : IQueryHandler<GetPurchaseOrdersQuery, PaginatedResult<PurchaseOrderResponse>>
 {
     private readonly IApplicationDbContext _context;
 
@@ -12,7 +13,7 @@ internal sealed class GetPurchaseOrdersQueryHandler : IQueryHandler<GetPurchaseO
         _context = context;
     }
 
-    public async Task<Result<IReadOnlyList<PurchaseOrderResponse>>> Handle(GetPurchaseOrdersQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaginatedResult<PurchaseOrderResponse>>> Handle(GetPurchaseOrdersQuery request, CancellationToken cancellationToken)
     {
         var query = _context.PurchaseOrders
                 .AsNoTracking()
@@ -82,6 +83,19 @@ internal sealed class GetPurchaseOrdersQueryHandler : IQueryHandler<GetPurchaseO
             )
             .ToListAsync(cancellationToken);
 
-        return purchaseOrders;
+        var count = purchaseOrders.Count;
+        //round up partial pages 
+        var totalPages = (count + request.PageSize - 1) / request.PageSize;
+
+        var result = new PaginatedResult<PurchaseOrderResponse>(
+              Items: purchaseOrders,
+              CurrentPage: request.Page,
+              PageSize: request.PageSize,
+              TotalItems: count,
+              TotalPages: totalPages
+        );
+
+        return result;
+
     }
 }
