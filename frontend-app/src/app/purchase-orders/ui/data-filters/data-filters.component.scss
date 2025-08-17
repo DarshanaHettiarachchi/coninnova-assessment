@@ -1,3 +1,16 @@
-:host {
-  display: block;
+@import "../../../../styles/forms";
+
+@include formStyles();
+
+input {
+  margin-left: 5px;
+}
+
+form {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  @media (max-width: 650px) {
+    flex-wrap: wrap;
+  }
 }
