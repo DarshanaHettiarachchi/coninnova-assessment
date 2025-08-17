@@ -64,6 +64,7 @@ export interface PurchaseOrderTableRow {
   orderDate: string;
   totalAmount: string;
   supplier: string;
+  actions?: string;
 }
 
 export interface PurchaseOrderJson {

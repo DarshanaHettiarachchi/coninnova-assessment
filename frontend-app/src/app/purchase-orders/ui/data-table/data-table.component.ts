@@ -9,6 +9,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule, Sort, SortDirection } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 export interface ColumnDef<T> {
   key: Extract<keyof T, string>;
@@ -18,7 +20,14 @@ export interface ColumnDef<T> {
 }
 @Component({
   selector: 'app-data-table',
-  imports: [MatTableModule, MatSortModule, MatPaginatorModule, MatCardModule],
+  imports: [
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+  ],
   templateUrl: './data-table.component.html',
   styleUrl: './data-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

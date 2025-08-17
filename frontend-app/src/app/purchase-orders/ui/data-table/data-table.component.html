@@ -26,8 +26,18 @@
         <th mat-header-cell *matHeaderCellDef>
           {{ col.label }}
         </th>
+
         <td mat-cell *matCellDef="let row">
+          @if (col.key === 'actions') {
+          <button mat-icon-button>
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button>
+            <mat-icon>delete</mat-icon>
+          </button>
+          } @else {
           {{ col.cell ? col.cell(row) : row[col.key] }}
+          }
         </td>
       </ng-container>
       }

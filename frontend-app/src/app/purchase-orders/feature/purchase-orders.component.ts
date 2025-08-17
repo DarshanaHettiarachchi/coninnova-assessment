@@ -36,6 +36,7 @@ export class PurchaseOrdersComponent {
     { key: 'totalAmount', label: 'Total Amount', sortable: true },
     { key: 'orderDate', label: 'Order Date', sortable: true },
     { key: 'status', label: 'State' },
+    { key: 'actions', label: 'Actions' },
   ];
 
   sortActive: keyof PurchaseOrderTableRow =
