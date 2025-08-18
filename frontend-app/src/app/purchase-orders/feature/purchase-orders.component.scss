@@ -1,3 +1,12 @@
-:host {
-  display: block;
+.purchase-orders {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.purchase-orders > .data-table-container {
+  flex: 2;
+}
+.purchase-orders > .form-container {
+  flex: 1;
 }

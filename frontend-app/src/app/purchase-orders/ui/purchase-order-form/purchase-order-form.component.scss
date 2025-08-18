@@ -1,0 +1,10 @@
+@use "../../../../styles/forms";
+
+@include forms.formStyles();
+
+.form-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
