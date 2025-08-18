@@ -3,6 +3,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import {
   catchError,
   debounceTime,
+  filter,
   map,
   Observable,
   of,
@@ -23,7 +24,6 @@ import {
 } from './purchase-order-query.model';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { SortDirection } from '@angular/material/sort';
-import { A } from '@angular/cdk/keycodes';
 
 @Injectable({
   providedIn: 'root',
@@ -45,6 +45,20 @@ export class PurchaseOrderDataService {
 
   private purchaseOrderResult = toSignal(this.purchaseOrderResponse$, {
     initialValue: {} as Result<PaginatedResponse<PurchaseOrder>>,
+  });
+
+  private pendingSave = signal<CreatePurchaseOrderRequest | null>(null);
+  private pendingSave$ = toObservable(this.pendingSave);
+
+  private savedResult$ = this.pendingSave$.pipe(
+    filter(Boolean),
+    switchMap((po) => {
+      return this.addPurchaseOrder(po);
+    })
+  );
+
+  private SavedResult = toSignal(this.savedResult$, {
+    initialValue: { data: {} as PurchaseOrder } as Result<PurchaseOrder>,
   });
 
   fetchPurchaseOrdersError = computed(
@@ -105,6 +119,10 @@ export class PurchaseOrderDataService {
       ...query,
       ...filter,
     }));
+  }
+
+  queueForSave(po: CreatePurchaseOrderRequest) {
+    this.pendingSave.set(po);
   }
 
   private toParams(query: PurchaseOrderQuery): HttpParams {

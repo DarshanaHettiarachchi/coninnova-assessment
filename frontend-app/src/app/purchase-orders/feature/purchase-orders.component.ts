@@ -5,7 +5,10 @@ import {
 } from '../ui/data-table/data-table.component';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort, SortDirection } from '@angular/material/sort';
-import { PurchaseOrderTableRow } from '../data-access/purchase-order.model';
+import {
+  CreatePurchaseOrderRequest,
+  PurchaseOrderTableRow,
+} from '../data-access/purchase-order.model';
 import { PurchaseOrderDataService } from '../data-access/purchase-order-data.service';
 import {
   DEFAULT_PURCHASE_ORDER_QUERY,
@@ -71,5 +74,9 @@ export class PurchaseOrdersComponent {
     this.purchaseOrderDataService.setFilter({
       ...$event,
     });
+  }
+
+  onAddPO(po: CreatePurchaseOrderRequest) {
+    this.purchaseOrderDataService.queueForSave(po);
   }
 }
