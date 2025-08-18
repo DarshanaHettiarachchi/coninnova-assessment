@@ -76,3 +76,10 @@ export interface PurchaseOrderJson {
   totalAmount: Money;
   supplier: SupplierResponse;
 }
+
+export interface CreatePurchaseOrderRequest {
+  supplierId: string;
+  description: string;
+  orderDate: string; //"2025-08-18"
+  totalAmount: number;
+}
