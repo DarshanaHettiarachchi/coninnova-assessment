@@ -59,6 +59,7 @@ export class PurchaseOrder {
       description: po.description,
       orderDate: po.orderDate,
       totalAmount: po.totalAmount.amount,
+      status: po.status,
     };
   }
 }
@@ -92,4 +93,5 @@ export interface CreatePurchaseOrderRequest {
 
 export interface updatePurchaseOrderRequest extends CreatePurchaseOrderRequest {
   id: string;
+  status: PurchaseOrderStatus;
 }

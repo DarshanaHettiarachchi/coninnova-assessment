@@ -84,4 +84,8 @@ export class PurchaseOrdersComponent {
   onEditRow($event: PurchaseOrderTableRow) {
     this.purchaseOrderDataService.queueForEdit($event);
   }
+
+  onCancelEdit($event: void) {
+    this.purchaseOrderDataService.queueForEdit(null);
+  }
 }

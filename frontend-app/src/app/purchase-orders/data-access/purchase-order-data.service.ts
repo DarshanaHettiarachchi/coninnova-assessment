@@ -129,7 +129,11 @@ export class PurchaseOrderDataService {
     this.pendingSave.set(po);
   }
 
-  queueForEdit(tr: PurchaseOrderTableRow) {
+  queueForEdit(tr: PurchaseOrderTableRow | null) {
+    if (!tr) {
+      this.pendingEdit.set(null);
+      return;
+    }
     const po = this.purchaseOrders()?.items.find((po) => po.id === tr.id);
     if (!po) {
       console.error('Purchase Order not found for editing:', tr.id);

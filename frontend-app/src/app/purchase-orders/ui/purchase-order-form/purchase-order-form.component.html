@@ -59,6 +59,18 @@
         <span class="form-error-msg">Total amount must be greater than 0.</span>
         } }
       </div>
+
+      @if(poToEdit()) {
+      <div class="form-control">
+        <label>Status</label>
+        <select name="status" formControlName="status">
+          @for (s of statuses; track s) {
+          <option [value]="s">{{ s }}</option>
+          }
+        </select>
+      </div>
+      }
+
       <div class="form-actions">
         <button mat-flat-button type="submit">{{ submitButtonText() }}</button>
         <button mat-stroked-button (click)="oncancel()" type="reset">

@@ -7,7 +7,12 @@ import {
   input,
   output,
 } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -17,6 +22,7 @@ import { MatInputModule } from '@angular/material/input';
 import {
   CreatePurchaseOrderRequest,
   PurchaseOrder,
+  PurchaseOrderStatus,
   updatePurchaseOrderRequest,
 } from '../../data-access/purchase-order.model';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -56,11 +62,21 @@ export class PurchaseOrderFormComponent {
   );
   submitButtonText = computed(() => (this.poToEdit() ? 'Update' : 'Add'));
 
-  form = this.fb.group({
+  statuses = Object.keys(PurchaseOrderStatus).filter((k) => isNaN(Number(k)));
+
+  form = this.fb.group<{
+    description: FormControl<string>;
+    supplier: FormControl<string>;
+    orderDate: FormControl<Date | null>;
+    totalAmount: FormControl<number | null>;
+    status?: FormControl<string>;
+  }>({
     description: this.fb.control('', {
+      nonNullable: true,
       validators: [Validators.required, Validators.maxLength(500)],
     }),
-    supplier: this.fb.control<string>('', {
+    supplier: this.fb.control('', {
+      nonNullable: true,
       validators: [Validators.required],
     }),
     orderDate: this.fb.control<Date | null>(null, {
@@ -70,19 +86,26 @@ export class PurchaseOrderFormComponent {
       validators: [Validators.required, Validators.min(1)],
     }),
   });
-
   constructor() {
     effect(() => {
       const po = this.poToEdit();
       if (po) {
+        this.form.addControl(
+          'status',
+          this.fb.control<string>('', {
+            nonNullable: true,
+            validators: [Validators.required],
+          })
+        );
         this.form.patchValue({
           description: po.description,
           supplier: po.supplierId,
           orderDate: new Date(po.orderDate),
           totalAmount: po.totalAmount,
+          status: PurchaseOrderStatus[po.status],
         });
-
-        console.log('Form patched with PO to edit:', this.form.value);
+      } else {
+        this.form.reset();
       }
     });
   }
@@ -90,7 +113,9 @@ export class PurchaseOrderFormComponent {
   oncancel() {
     if (this.poToEdit()) {
       this.cancelEdit.emit();
+      return;
     }
+    this.form.reset();
   }
 
   onsubmit() {
@@ -98,6 +123,8 @@ export class PurchaseOrderFormComponent {
     if (this.form.invalid) return;
 
     const formValue = this.form.value;
+
+    console.log('Form Value:', formValue);
 
     const isoDate = this.datePipe.transform(formValue.orderDate, 'yyyy-MM-dd');
 
