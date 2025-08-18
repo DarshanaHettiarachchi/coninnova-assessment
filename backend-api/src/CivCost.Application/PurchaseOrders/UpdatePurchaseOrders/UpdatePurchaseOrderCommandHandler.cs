@@ -38,7 +38,7 @@ internal sealed class UpdatePurchaseOrderCommandHandler : ICommandHandler<Update
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result.Success(po);
+        return Result.Success();
 
     }
 }
