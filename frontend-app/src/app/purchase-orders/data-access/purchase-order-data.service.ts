@@ -125,7 +125,7 @@ export class PurchaseOrderDataService {
             ...p,
             items: p.items.map(PurchaseOrder.fromJson),
           };
-          return { data: paginated } as Result<
+          return { success: true, data: paginated } as Result<
             PaginatedResponse<PurchaseOrder>
           >;
         }),
@@ -134,7 +134,8 @@ export class PurchaseOrderDataService {
         }),
         catchError((err) => {
           return of({
-            data: {} as PaginatedResponse<PurchaseOrder>,
+            success: false,
+            data: null,
             error: 'Failed to fetch purchase orders',
           } as Result<PaginatedResponse<PurchaseOrder>>);
         })
@@ -146,14 +147,19 @@ export class PurchaseOrderDataService {
   ): Observable<Result<PurchaseOrder>> {
     return this.http.post<PurchaseOrderJson>(this.BASE_URL, po).pipe(
       map(
-        (r) => ({ data: PurchaseOrder.fromJson(r) } as Result<PurchaseOrder>)
+        (r) =>
+          ({
+            success: true,
+            data: PurchaseOrder.fromJson(r),
+          } as Result<PurchaseOrder>)
       ),
       tap((p) => {
         console.log(p.data);
       }),
       catchError((err) => {
         return of({
-          data: {} as PurchaseOrder,
+          success: false,
+          data: null,
           error: 'Failed to save purchase order.',
         } as Result<PurchaseOrder>);
       })
