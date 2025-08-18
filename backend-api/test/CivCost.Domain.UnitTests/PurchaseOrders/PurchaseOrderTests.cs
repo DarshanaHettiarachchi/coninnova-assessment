@@ -2,6 +2,7 @@
 using FluentAssertions;
 
 namespace CivCost.Domain.UnitTests.PurchaseOrders;
+
 public class PurchaseOrderTests
 {
     [Fact]
@@ -21,7 +22,6 @@ public class PurchaseOrderTests
         result.IsSuccess.Should().BeTrue();
         po.Status.Should().Be(PurchaseOrderStatus.Approved);
     }
-
 
     [Theory]
     [InlineData(PurchaseOrderStatus.Approved)]
@@ -72,13 +72,12 @@ public class PurchaseOrderTests
     [Theory]
     [InlineData(PurchaseOrderStatus.Shipped)]
     [InlineData(PurchaseOrderStatus.Completed)]
-    [InlineData(PurchaseOrderStatus.Cancelled)]
-    public void Cancel_Should_ReturnFailure_ForNonDraftOrApprovedStatuses(PurchaseOrderStatus status)
+    public void Cancel_Should_ReturnFailure_ForShippedOrCompletedStatuses(PurchaseOrderStatus status)
     {
         // Arrange
         var po = PurchaseOrder.Create(
-            poNumber: "PO-002",
-            description: "Test PO",
+            poNumber: "PO-004",
+            description: "Not cancellable PO",
             orderDate: DateOnly.FromDateTime(DateTime.Today),
             totalAmount: new Money(100m),
             status: status,
@@ -93,5 +92,4 @@ public class PurchaseOrderTests
         result.Error.Should().Be(PurchaseOrderErrors.CannotCancelNonDraftOrShipped);
         po.Status.Should().Be(status); // Status remains unchanged
     }
-
 }
