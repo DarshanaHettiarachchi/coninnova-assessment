@@ -13,16 +13,26 @@ import {
 } from '../data-access/purchase-order-query.model';
 import { DataFiltersComponent } from '../ui/data-filters/data-filters.component';
 import { MatButtonModule } from '@angular/material/button';
+import { PurchaseOrderFormComponent } from '../ui/purchase-order-form/purchase-order-form.component';
+import { SuppliersDataService } from '../data-access/suppliers-data.service';
 
 @Component({
   selector: 'app-purchase-orders',
-  imports: [DataTableComponent, DataFiltersComponent, MatButtonModule],
+  imports: [
+    DataTableComponent,
+    DataFiltersComponent,
+    MatButtonModule,
+    PurchaseOrderFormComponent,
+  ],
   templateUrl: './purchase-orders.component.html',
   styleUrl: './purchase-orders.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PurchaseOrdersComponent {
   private purchaseOrderDataService = inject(PurchaseOrderDataService);
+  private supplierDataService = inject(SuppliersDataService);
+
+  suppliers = this.supplierDataService.suppliers;
 
   orders = this.purchaseOrderDataService.purchaseOrderTableRows;
   totalItems = this.purchaseOrderDataService.totalItems;
@@ -61,9 +71,5 @@ export class PurchaseOrdersComponent {
     this.purchaseOrderDataService.setFilter({
       ...$event,
     });
-  }
-
-  onAddPO() {
-    console.log('Add Purchase Order button clicked');
   }
 }

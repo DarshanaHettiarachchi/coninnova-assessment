@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, of, tap } from 'rxjs';
 import { Result } from '../../shared/result.model';
 import { Supplier } from './supplier.model';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,17 @@ import { Supplier } from './supplier.model';
 export class SuppliersDataService {
   private readonly BASE_URL = 'api/suppliers';
   private http = inject(HttpClient);
+
+  private readonly suppliersResponse$: Observable<Result<Supplier[]>> =
+    this.fetchAllSuppliers();
+
+  private readonly supplierResult = toSignal(this.suppliersResponse$, {
+    initialValue: {} as Result<Supplier[]>,
+  });
+
+  suppliers = () => {
+    return this.supplierResult().data || [];
+  };
 
   private fetchAllSuppliers(): Observable<Result<Supplier[]>> {
     return this.http.get<Supplier[]>(this.BASE_URL).pipe(
