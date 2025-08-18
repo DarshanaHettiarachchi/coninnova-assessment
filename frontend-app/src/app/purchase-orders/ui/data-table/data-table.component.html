@@ -20,14 +20,9 @@
           {{ col.label }}
         </th>
         }
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{ col.label }}
-        </th>
-        <th mat-header-cell *matHeaderCellDef>
-          {{ col.label }}
-        </th>
 
         <td mat-cell *matCellDef="let row">
+          <!-- Special handling for 'actions' column -->
           @if (col.key === 'actions') {
           <button mat-icon-button (click)="onEdit(row)">
             <mat-icon>edit</mat-icon>
@@ -35,12 +30,27 @@
           <button mat-icon-button>
             <mat-icon>delete</mat-icon>
           </button>
-          } @else {
+          }
+
+          <!-- Special handling for 'status' column -->
+          @else if (col.key === 'status') {
+          <select class="status-select" (change)="onStatusChange(row, $event)">
+            @for (s of statuses; track s) {
+            <option [value]="s" [selected]="s === row.status">
+              {{ s }}
+            </option>
+            }
+          </select>
+          }
+
+          <!-- Default fallback for other columns -->
+          @else {
           {{ col.cell ? col.cell(row) : row[col.key] }}
           }
         </td>
       </ng-container>
       }
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns()"></tr>
     </table>

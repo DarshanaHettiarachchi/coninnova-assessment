@@ -11,6 +11,9 @@ import { MatSortModule, Sort, SortDirection } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { PurchaseOrderStatus } from '../../data-access/purchase-order.model';
 
 export interface ColumnDef<T> {
   key: Extract<keyof T, string>;
@@ -27,6 +30,8 @@ export interface ColumnDef<T> {
     MatCardModule,
     MatIconModule,
     MatButtonModule,
+    MatFormFieldModule,
+    MatSelectModule,
   ],
   templateUrl: './data-table.component.html',
   styleUrl: './data-table.component.scss',
@@ -47,6 +52,12 @@ export class DataTableComponent<T> {
 
   displayedColumns = computed(() => this.columns().map((c) => c.key as string));
 
+  statuses = Object.values(PurchaseOrderStatus).filter(
+    (status) => typeof status === 'string'
+  ) as string[];
+
+  purchaseOrderStatus = PurchaseOrderStatus;
+
   onPageChange(event: PageEvent) {
     this.pageChange.emit(event);
   }
@@ -57,5 +68,11 @@ export class DataTableComponent<T> {
 
   onEdit(row: T) {
     this.editRow.emit(row);
+  }
+
+  onStatusChange(row: T, x: any) {
+    // Handle status change logic here
+    console.log('Status changed for row:', row, 'to:', x);
+    // You can emit an event or call a service to update the status
   }
 }
