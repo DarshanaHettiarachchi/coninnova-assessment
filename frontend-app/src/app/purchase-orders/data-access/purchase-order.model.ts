@@ -1,7 +1,4 @@
-export interface SupplierResponse {
-  id: string;
-  name: string;
-}
+import { Supplier } from './supplier.model';
 
 export interface Money {
   amount: number;
@@ -24,7 +21,7 @@ export class PurchaseOrder {
     public status: PurchaseOrderStatus,
     public orderDate: string,
     public totalAmount: Money,
-    public supplier: SupplierResponse
+    public supplier: Supplier
   ) {}
 
   get formattedDate(): string {
@@ -74,7 +71,7 @@ export interface PurchaseOrderJson {
   status: PurchaseOrderStatus;
   orderDate: string;
   totalAmount: Money;
-  supplier: SupplierResponse;
+  supplier: Supplier;
 }
 
 export interface CreatePurchaseOrderRequest {
