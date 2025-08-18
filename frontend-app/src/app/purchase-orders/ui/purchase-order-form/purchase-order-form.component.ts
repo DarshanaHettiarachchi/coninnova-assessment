@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   inject,
   input,
   output,
@@ -16,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import {
   CreatePurchaseOrderRequest,
   PurchaseOrder,
+  updatePurchaseOrderRequest,
 } from '../../data-access/purchase-order.model';
 import { MatNativeDateModule } from '@angular/material/core';
 import { Supplier } from '../../data-access/supplier.model';
@@ -43,7 +45,7 @@ export class PurchaseOrderFormComponent {
   datePipe = inject(DatePipe);
 
   suppliers = input<Supplier[]>([]);
-  poToEdit = input<PurchaseOrder | null>(null);
+  poToEdit = input<updatePurchaseOrderRequest | null>(null);
   cancelEdit = output();
   addPO = output<CreatePurchaseOrderRequest>();
   updatePO = output<PurchaseOrder>();
@@ -68,6 +70,22 @@ export class PurchaseOrderFormComponent {
       validators: [Validators.required, Validators.min(1)],
     }),
   });
+
+  constructor() {
+    effect(() => {
+      const po = this.poToEdit();
+      if (po) {
+        this.form.patchValue({
+          description: po.description,
+          supplier: po.supplierId,
+          orderDate: new Date(po.orderDate),
+          totalAmount: po.totalAmount,
+        });
+
+        console.log('Form patched with PO to edit:', this.form.value);
+      }
+    });
+  }
 
   oncancel() {
     if (this.poToEdit()) {

@@ -17,6 +17,7 @@ import {
   PurchaseOrder,
   PurchaseOrderJson,
   PurchaseOrderTableRow,
+  updatePurchaseOrderRequest,
 } from './purchase-order.model';
 import {
   DEFAULT_PURCHASE_ORDER_QUERY,
@@ -60,6 +61,9 @@ export class PurchaseOrderDataService {
   private SavedResult = toSignal(this.savedResult$, {
     initialValue: { data: {} as PurchaseOrder } as Result<PurchaseOrder>,
   });
+
+  private pendingEdit = signal<updatePurchaseOrderRequest | null>(null);
+  poToEdit = this.pendingEdit.asReadonly();
 
   fetchPurchaseOrdersError = computed(
     () => this.purchaseOrderResult().error || null
@@ -125,8 +129,14 @@ export class PurchaseOrderDataService {
     this.pendingSave.set(po);
   }
 
-  queueForEdit(po: PurchaseOrderTableRow) {
-    console.log('Queueing for edit:', po);
+  queueForEdit(tr: PurchaseOrderTableRow) {
+    const po = this.purchaseOrders()?.items.find((po) => po.id === tr.id);
+    if (!po) {
+      console.error('Purchase Order not found for editing:', tr.id);
+      return;
+    }
+    var ur = PurchaseOrder.toUpdateRequest(po);
+    this.pendingEdit.set(ur);
   }
 
   private toParams(query: PurchaseOrderQuery): HttpParams {

@@ -41,6 +41,7 @@ export class PurchaseOrdersComponent {
   totalItems = this.purchaseOrderDataService.totalItems;
   pageSize = this.purchaseOrderDataService.pageSize;
   pageIndex = this.purchaseOrderDataService.pageIndex;
+  poToEdit = this.purchaseOrderDataService.poToEdit;
 
   columns: ColumnDef<PurchaseOrderTableRow>[] = [
     { key: 'poNumber', label: '#', sortable: true },

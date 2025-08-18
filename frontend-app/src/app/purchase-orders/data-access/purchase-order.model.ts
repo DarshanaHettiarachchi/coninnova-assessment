@@ -52,15 +52,13 @@ export class PurchaseOrder {
     };
   }
 
-  static toUpdateRequest(
-    tr: PurchaseOrderTableRow
-  ): updatePurchaseOrderRequest {
+  static toUpdateRequest(po: PurchaseOrder): updatePurchaseOrderRequest {
     return {
-      id: tr.id,
-      supplierId: tr.supplier,
-      description: tr.description,
-      orderDate: tr.orderDate,
-      totalAmount: tr.totalAmount,
+      id: po.id,
+      supplierId: po.supplier.id,
+      description: po.description,
+      orderDate: po.orderDate,
+      totalAmount: po.totalAmount.amount,
     };
   }
 }

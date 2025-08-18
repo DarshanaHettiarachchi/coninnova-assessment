@@ -19,6 +19,7 @@
   <div class="form-container">
     <app-purchase-order-form
       [suppliers]="suppliers()"
+      [poToEdit]="poToEdit()"
       (addPO)="onAddPO($event)"
     ></app-purchase-order-form>
   </div>
