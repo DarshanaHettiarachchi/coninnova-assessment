@@ -1,4 +1,5 @@
 export interface Result<T> {
-  data: T | undefined;
+  success: boolean;
+  data: T | null;
   error?: string;
 }
