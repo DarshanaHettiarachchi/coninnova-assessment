@@ -54,7 +54,7 @@ export class PurchaseOrderFormComponent {
   poToEdit = input<updatePurchaseOrderRequest | null>(null);
   cancelEdit = output();
   addPO = output<CreatePurchaseOrderRequest>();
-  updatePO = output<PurchaseOrder>();
+  updatePO = output<updatePurchaseOrderRequest>();
   formLoading = input<boolean>(false);
 
   formTitle = computed(() =>
@@ -128,13 +128,32 @@ export class PurchaseOrderFormComponent {
 
     const isoDate = this.datePipe.transform(formValue.orderDate, 'yyyy-MM-dd');
 
-    const po: CreatePurchaseOrderRequest = {
+    const poToEdit = this.poToEdit();
+
+    if (!poToEdit) {
+      const po: CreatePurchaseOrderRequest = {
+        description: formValue.description as string,
+        supplierId: formValue.supplier as string,
+        orderDate: isoDate as string,
+        totalAmount: formValue.totalAmount as number,
+      };
+      this.addPO.emit(po);
+      this.form.reset();
+      return;
+    }
+
+    const updatedPo: updatePurchaseOrderRequest = {
+      id: poToEdit.id,
       description: formValue.description as string,
       supplierId: formValue.supplier as string,
       orderDate: isoDate as string,
       totalAmount: formValue.totalAmount as number,
+      status:
+        PurchaseOrderStatus[
+          formValue.status as keyof typeof PurchaseOrderStatus
+        ],
     };
-
-    this.addPO.emit(po);
+    this.updatePO.emit(updatedPo);
+    this.form.reset();
   }
 }

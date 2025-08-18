@@ -8,6 +8,7 @@ import { Sort, SortDirection } from '@angular/material/sort';
 import {
   CreatePurchaseOrderRequest,
   PurchaseOrderTableRow,
+  updatePurchaseOrderRequest,
 } from '../data-access/purchase-order.model';
 import { PurchaseOrderDataService } from '../data-access/purchase-order-data.service';
 import {
@@ -70,22 +71,25 @@ export class PurchaseOrdersComponent {
     );
   }
 
-  onFilterChange($event: Partial<PurchaseOrderQuery>) {
-    console.log('Filter event:', $event);
+  onFilterChange(event: Partial<PurchaseOrderQuery>) {
     this.purchaseOrderDataService.setFilter({
-      ...$event,
+      ...event,
     });
   }
 
-  onAddPO(po: CreatePurchaseOrderRequest) {
-    this.purchaseOrderDataService.queueForSave(po);
+  onAddPO(event: CreatePurchaseOrderRequest) {
+    this.purchaseOrderDataService.queueForSave(event);
   }
 
-  onEditRow($event: PurchaseOrderTableRow) {
-    this.purchaseOrderDataService.queueForEdit($event);
+  onEditRow(event: PurchaseOrderTableRow) {
+    this.purchaseOrderDataService.queueForEdit(event);
   }
 
-  onCancelEdit($event: void) {
+  onCancelEdit() {
     this.purchaseOrderDataService.queueForEdit(null);
+  }
+
+  onUpdatePO(event: updatePurchaseOrderRequest) {
+    this.purchaseOrderDataService.queueForUpdate(event);
   }
 }

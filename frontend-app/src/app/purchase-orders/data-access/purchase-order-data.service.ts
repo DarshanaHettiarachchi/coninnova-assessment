@@ -65,6 +65,19 @@ export class PurchaseOrderDataService {
   private pendingEdit = signal<updatePurchaseOrderRequest | null>(null);
   poToEdit = this.pendingEdit.asReadonly();
 
+  private pendingUpdate = signal<updatePurchaseOrderRequest | null>(null);
+  private pendingUpdate$ = toObservable(this.pendingUpdate);
+  private updatedResult$ = this.pendingUpdate$.pipe(
+    filter(Boolean),
+    switchMap((po) => {
+      return this.updatePurchaseOrder(po);
+    })
+  );
+
+  private UpdatedResult = toSignal(this.updatedResult$, {
+    initialValue: { data: {} as PurchaseOrder } as Result<PurchaseOrder>,
+  });
+
   fetchPurchaseOrdersError = computed(
     () => this.purchaseOrderResult().error || null
   );
@@ -143,6 +156,10 @@ export class PurchaseOrderDataService {
     this.pendingEdit.set(ur);
   }
 
+  queueForUpdate(po: updatePurchaseOrderRequest) {
+    this.pendingUpdate.set(po);
+  }
+
   private toParams(query: PurchaseOrderQuery): HttpParams {
     let params = new HttpParams()
       .set('page', query.page.toString())
@@ -213,5 +230,31 @@ export class PurchaseOrderDataService {
         } as Result<PurchaseOrder>);
       })
     );
+  }
+
+  private updatePurchaseOrder(
+    po: updatePurchaseOrderRequest
+  ): Observable<Result<PurchaseOrder>> {
+    return this.http
+      .put<PurchaseOrderJson>(`${this.BASE_URL}/${po.id}`, po)
+      .pipe(
+        map(
+          (r) =>
+            ({
+              success: true,
+              data: PurchaseOrder.fromJson(r),
+            } as Result<PurchaseOrder>)
+        ),
+        tap((p) => {
+          console.log(p.data);
+        }),
+        catchError((err) => {
+          return of({
+            success: false,
+            data: null,
+            error: 'Failed to save purchase order.',
+          } as Result<PurchaseOrder>);
+        })
+      );
   }
 }
