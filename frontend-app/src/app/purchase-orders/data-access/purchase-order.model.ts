@@ -47,19 +47,30 @@ export class PurchaseOrder {
       description: po.description,
       status: PurchaseOrderStatus[po.status],
       orderDate: po.orderDate,
-      totalAmount: `${po.totalAmount.amount} ${po.totalAmount.currency}`,
+      totalAmount: po.totalAmount.amount,
       supplier: po.supplier.name,
     };
   }
-}
 
+  static toUpdateRequest(
+    tr: PurchaseOrderTableRow
+  ): updatePurchaseOrderRequest {
+    return {
+      id: tr.id,
+      supplierId: tr.supplier,
+      description: tr.description,
+      orderDate: tr.orderDate,
+      totalAmount: tr.totalAmount,
+    };
+  }
+}
 export interface PurchaseOrderTableRow {
   id: string;
   poNumber: string;
   description: string;
   status: string;
   orderDate: string;
-  totalAmount: string;
+  totalAmount: number;
   supplier: string;
   actions?: string;
 }
@@ -79,4 +90,8 @@ export interface CreatePurchaseOrderRequest {
   description: string;
   orderDate: string; //"2025-08-18"
   totalAmount: number;
+}
+
+export interface updatePurchaseOrderRequest extends CreatePurchaseOrderRequest {
+  id: string;
 }
