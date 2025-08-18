@@ -12,6 +12,7 @@ import {
 import { Result } from '../../shared/result.model';
 import { PaginatedResponse } from '../../shared/paginated-response.model';
 import {
+  CreatePurchaseOrderRequest,
   PurchaseOrder,
   PurchaseOrderJson,
   PurchaseOrderTableRow,
@@ -138,5 +139,24 @@ export class PurchaseOrderDataService {
           } as Result<PaginatedResponse<PurchaseOrder>>);
         })
       );
+  }
+
+  private addPurchaseOrder(
+    po: CreatePurchaseOrderRequest
+  ): Observable<Result<PurchaseOrder>> {
+    return this.http.post<PurchaseOrderJson>(this.BASE_URL, po).pipe(
+      map(
+        (r) => ({ data: PurchaseOrder.fromJson(r) } as Result<PurchaseOrder>)
+      ),
+      tap((p) => {
+        console.log(p.data);
+      }),
+      catchError((err) => {
+        return of({
+          data: {} as PurchaseOrder,
+          error: 'Failed to save purchase order.',
+        } as Result<PurchaseOrder>);
+      })
+    );
   }
 }
