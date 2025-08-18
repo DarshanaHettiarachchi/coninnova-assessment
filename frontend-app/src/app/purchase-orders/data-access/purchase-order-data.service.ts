@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import {
   catchError,
   debounceTime,
@@ -25,6 +25,7 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { SortDirection } from '@angular/material/sort';
 import { Result } from '../../shared/models/result.model';
 import { PaginatedResponse } from '../../shared/models/paginated-response.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +33,7 @@ import { PaginatedResponse } from '../../shared/models/paginated-response.model'
 export class PurchaseOrderDataService {
   private readonly BASE_URL = 'api/purchase-orders';
   private http = inject(HttpClient);
+  private snackBar = inject(MatSnackBar);
 
   private readonly purchaseOrderQuery = signal<PurchaseOrderQuery>(
     DEFAULT_PURCHASE_ORDER_QUERY
@@ -45,7 +47,7 @@ export class PurchaseOrderDataService {
   );
 
   private purchaseOrderResult = toSignal(this.purchaseOrderResponse$, {
-    initialValue: {} as Result<PaginatedResponse<PurchaseOrder>>,
+    initialValue: { data: null } as Result<PaginatedResponse<PurchaseOrder>>,
   });
 
   private pendingSave = signal<CreatePurchaseOrderRequest | null>(null);
@@ -59,7 +61,7 @@ export class PurchaseOrderDataService {
   );
 
   private SavedResult = toSignal(this.savedResult$, {
-    initialValue: { data: {} as PurchaseOrder } as Result<PurchaseOrder>,
+    initialValue: { data: null } as Result<void>,
   });
 
   private pendingEdit = signal<updatePurchaseOrderRequest | null>(null);
@@ -75,7 +77,12 @@ export class PurchaseOrderDataService {
   );
 
   private UpdatedResult = toSignal(this.updatedResult$, {
-    initialValue: { data: {} as PurchaseOrder } as Result<PurchaseOrder>,
+    initialValue: { data: null } as Result<void>,
+  });
+
+  poAdded = computed(() => {
+    const result = this.SavedResult();
+    return result?.data || null;
   });
 
   fetchPurchaseOrdersError = computed(
@@ -210,15 +217,14 @@ export class PurchaseOrderDataService {
 
   private addPurchaseOrder(
     po: CreatePurchaseOrderRequest
-  ): Observable<Result<PurchaseOrder>> {
+  ): Observable<Result<void>> {
     return this.http.post<PurchaseOrderJson>(this.BASE_URL, po).pipe(
-      map(
-        (r) =>
-          ({
-            success: true,
-            data: PurchaseOrder.fromJson(r),
-          } as Result<PurchaseOrder>)
-      ),
+      map(() => {
+        return {
+          success: true,
+          data: null,
+        } as Result<void>;
+      }),
       tap((p) => {
         console.log(p.data);
       }),
@@ -227,14 +233,14 @@ export class PurchaseOrderDataService {
           success: false,
           data: null,
           error: 'Failed to save purchase order.',
-        } as Result<PurchaseOrder>);
+        } as Result<void>);
       })
     );
   }
 
   private updatePurchaseOrder(
     po: updatePurchaseOrderRequest
-  ): Observable<Result<PurchaseOrder>> {
+  ): Observable<Result<void>> {
     return this.http
       .put<PurchaseOrderJson>(`${this.BASE_URL}/${po.id}`, po)
       .pipe(
@@ -242,8 +248,8 @@ export class PurchaseOrderDataService {
           (r) =>
             ({
               success: true,
-              data: PurchaseOrder.fromJson(r),
-            } as Result<PurchaseOrder>)
+              data: null,
+            } as Result<void>)
         ),
         tap((p) => {
           console.log(p.data);
@@ -253,7 +259,7 @@ export class PurchaseOrderDataService {
             success: false,
             data: null,
             error: 'Failed to save purchase order.',
-          } as Result<PurchaseOrder>);
+          } as Result<void>);
         })
       );
   }
