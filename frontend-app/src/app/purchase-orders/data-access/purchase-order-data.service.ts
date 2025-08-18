@@ -10,8 +10,6 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { Result } from '../../shared/result.model';
-import { PaginatedResponse } from '../../shared/paginated-response.model';
 import {
   CreatePurchaseOrderRequest,
   PurchaseOrder,
@@ -25,6 +23,8 @@ import {
 } from './purchase-order-query.model';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { SortDirection } from '@angular/material/sort';
+import { Result } from '../../shared/models/result.model';
+import { PaginatedResponse } from '../../shared/models/paginated-response.model';
 
 @Injectable({
   providedIn: 'root',

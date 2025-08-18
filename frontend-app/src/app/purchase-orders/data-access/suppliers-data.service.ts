@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, of, tap } from 'rxjs';
-import { Result } from '../../shared/result.model';
 import { Supplier } from './supplier.model';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { Result } from '../../shared/models/result.model';
 
 @Injectable({
   providedIn: 'root',
