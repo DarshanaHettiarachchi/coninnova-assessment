@@ -125,6 +125,10 @@ export class PurchaseOrderDataService {
     this.pendingSave.set(po);
   }
 
+  queueForEdit(po: PurchaseOrderTableRow) {
+    console.log('Queueing for edit:', po);
+  }
+
   private toParams(query: PurchaseOrderQuery): HttpParams {
     let params = new HttpParams()
       .set('page', query.page.toString())

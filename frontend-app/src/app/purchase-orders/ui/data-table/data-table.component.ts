@@ -43,6 +43,7 @@ export class DataTableComponent<T> {
 
   pageChange = output<PageEvent>();
   sortChange = output<Sort>();
+  editRow = output<T>();
 
   displayedColumns = computed(() => this.columns().map((c) => c.key as string));
 
@@ -52,5 +53,9 @@ export class DataTableComponent<T> {
 
   onSortChange(event: Sort) {
     this.sortChange.emit(event);
+  }
+
+  onEdit(row: T) {
+    this.editRow.emit(row);
   }
 }

@@ -79,4 +79,8 @@ export class PurchaseOrdersComponent {
   onAddPO(po: CreatePurchaseOrderRequest) {
     this.purchaseOrderDataService.queueForSave(po);
   }
+
+  onEditRow($event: PurchaseOrderTableRow) {
+    this.purchaseOrderDataService.queueForEdit($event);
+  }
 }
