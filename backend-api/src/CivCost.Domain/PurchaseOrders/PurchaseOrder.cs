@@ -93,9 +93,6 @@ public class PurchaseOrder : Entity
         if (Status == PurchaseOrderStatus.Shipped || Status == PurchaseOrderStatus.Completed)
             return Result.Failure(PurchaseOrderErrors.CannotCancelNonDraftOrShipped);
 
-        if (Status == PurchaseOrderStatus.Cancelled)
-            return Result.Failure(PurchaseOrderErrors.AlreadyCancelled);
-
         Status = PurchaseOrderStatus.Cancelled;
         return Result.Success();
     }
@@ -108,7 +105,7 @@ public class PurchaseOrder : Entity
         Status = PurchaseOrderStatus.Draft;
         return Result.Success();
     }
-    public Result Update(string description, Money totalAmount, DateOnly orderDate)
+    public Result Update(string description, Money totalAmount, DateOnly orderDate, Guid supplierId)
     {
         if (Status != PurchaseOrderStatus.Draft)
             return Result.Failure(PurchaseOrderErrors.CannotUpdate);
@@ -116,6 +113,7 @@ public class PurchaseOrder : Entity
         Description = description;
         OrderDate = orderDate;
         TotalAmount = totalAmount;
+        SupplierId = supplierId;
 
         return Result.Success();
     }

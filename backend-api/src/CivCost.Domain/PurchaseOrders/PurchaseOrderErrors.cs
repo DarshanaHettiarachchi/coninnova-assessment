@@ -13,11 +13,6 @@ public static class PurchaseOrderErrors
         "Only draft or approved purchase orders can be cancelled."
     );
 
-    public static readonly Error AlreadyCancelled = new(
-        "PurchaseOrder.AlreadyCancelled",
-        "The purchase order is already cancelled."
-    );
-
     public static readonly Error CannotUpdate = new(
         "PurchaseOrder.CannotUpdate",
         "Only draft purchase orders can be updated."
