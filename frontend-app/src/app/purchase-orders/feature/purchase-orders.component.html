@@ -1,14 +1,21 @@
 <h3>Purchase Orders</h3>
-<app-data-filters
-  (filterChange)="onFilterChange($event)"
-  (addPO)="onAddPO()"
-></app-data-filters>
-<app-data-table
-  [data]="orders()"
-  [columns]="columns"
-  [totalItems]="totalItems()"
-  [sortActive]="sortActive"
-  [sortDirection]="sortDirection"
-  (pageChange)="onPageChange($event)"
-  (sortChange)="onSortChange($event)"
-></app-data-table>
+<section class="purchase-orders">
+  <div class="data-table-container">
+    <app-data-filters
+      [suppliers]="suppliers()"
+      (filterChange)="onFilterChange($event)"
+    ></app-data-filters>
+    <app-data-table
+      [data]="orders()"
+      [columns]="columns"
+      [totalItems]="totalItems()"
+      [sortActive]="sortActive"
+      [sortDirection]="sortDirection"
+      (pageChange)="onPageChange($event)"
+      (sortChange)="onSortChange($event)"
+    ></app-data-table>
+  </div>
+  <div class="form-container">
+    <app-purchase-order-form></app-purchase-order-form>
+  </div>
+</section>

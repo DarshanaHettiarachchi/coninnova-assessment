@@ -3,6 +3,7 @@ import {
   Component,
   effect,
   inject,
+  input,
   output,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -12,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { PurchaseOrderStatus } from '../../data-access/purchase-order.model';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { PurchaseOrderQuery } from '../../data-access/purchase-order-query.model';
+import { Supplier } from '../../data-access/supplier.model';
 
 @Component({
   selector: 'app-data-filters',
@@ -24,15 +26,12 @@ export class DataFiltersComponent {
   fb = inject(FormBuilder);
 
   form = this.fb.group({
-    status: [
-      '',
-      {
-        validators: [Validators.required],
-      },
-    ],
+    status: [''],
+    supplier: [''],
   });
 
   statuses = Object.keys(PurchaseOrderStatus).filter((k) => isNaN(Number(k)));
+  suppliers = input<Supplier[]>([]);
 
   filterChange = output<Partial<PurchaseOrderQuery>>();
 
@@ -47,6 +46,7 @@ export class DataFiltersComponent {
             PurchaseOrderStatus[
               values.status as keyof typeof PurchaseOrderStatus
             ] || '',
+          supplierId: values.supplier || '',
         } as Partial<PurchaseOrderQuery>);
       }
     });

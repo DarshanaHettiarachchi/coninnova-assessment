@@ -23,6 +23,7 @@ import {
 } from './purchase-order-query.model';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { SortDirection } from '@angular/material/sort';
+import { A } from '@angular/cdk/keycodes';
 
 @Injectable({
   providedIn: 'root',
@@ -106,18 +107,30 @@ export class PurchaseOrderDataService {
     }));
   }
 
+  private toParams(query: PurchaseOrderQuery): HttpParams {
+    let params = new HttpParams()
+      .set('page', query.page.toString())
+      .set('pageSize', query.pageSize.toString())
+      .set('sortBy', query.sortBy)
+      .set('sortDirection', query.sortDirection);
+
+    if (query.status) {
+      params = params.set('status', query.status);
+    }
+    if (query.supplierId) {
+      params = params.set('supplierId', query.supplierId);
+    }
+
+    return params;
+  }
+
   private fetchPurchaseOrders(
     query: PurchaseOrderQuery
   ): Observable<Result<PaginatedResponse<PurchaseOrder>>> {
+    var params = this.toParams(query);
     return this.http
       .get<PaginatedResponse<PurchaseOrderJson>>(this.BASE_URL, {
-        params: {
-          status: query.status,
-          page: query.page,
-          pageSize: query.pageSize,
-          sortBy: query.sortBy,
-          sortDirection: query.sortDirection,
-        },
+        params,
       })
       .pipe(
         map((p) => {

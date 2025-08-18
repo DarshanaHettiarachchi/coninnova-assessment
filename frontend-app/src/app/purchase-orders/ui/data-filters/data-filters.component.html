@@ -10,6 +10,15 @@
           }
         </select>
       </div>
+      <div class="form-control">
+        <label>Supplier</label>
+        <select name="supplier" formControlName="supplier">
+          <option value="">All</option>
+          @for (s of suppliers(); track s.id) {
+          <option [value]="s.id">{{ s.name }}</option>
+          }
+        </select>
+      </div>
     </form>
   </mat-card-content>
 </mat-card>
