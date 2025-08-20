@@ -22,15 +22,6 @@ internal sealed class UpdatePurchaseOrderCommandHandler : ICommandHandler<Update
             return Result.Failure(PurchaseOrderErrors.NotFound);
         }
 
-        if (po.Status != request.Status)
-        {
-            var statusResult = po.UpdateStatus(request.Status);
-            if (statusResult.IsFailure)
-            {
-                return statusResult;
-            }
-        }
-
         var totalAmount = new Money(request.TotalAmount);
 
         var updateResult = po.Update(
