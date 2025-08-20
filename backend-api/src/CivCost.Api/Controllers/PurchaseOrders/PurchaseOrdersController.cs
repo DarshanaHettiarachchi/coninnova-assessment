@@ -1,8 +1,10 @@
 ﻿using CivCost.Application.Common;
 using CivCost.Application.PurchaseOrders.AddPurchaseOrder;
+using CivCost.Application.PurchaseOrders.ChangeStatus;
 using CivCost.Application.PurchaseOrders.GetPurchaseOrders;
 using CivCost.Application.PurchaseOrders.UpdatePurchaseOrders;
 using CivCost.Domain.Abstractions;
+using CivCost.Domain.PurchaseOrders;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -68,6 +70,24 @@ public class PurchaseOrdersController : ControllerBase
             OrderDate: request.OrderDate,
             TotalAmount: request.TotalAmount,
             Status: request.Status
+        );
+
+        Result result = await _sender.Send(update, cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return BadRequest(result.Error);
+        }
+
+        return Ok();
+    }
+
+    [HttpPut("{id}/status")]
+    public async Task<IActionResult> ChangeStatus(Guid id, PurchaseOrderStatus status, CancellationToken cancellationToken)
+    {
+        var update = new ChangeStatusCommand(
+            Id: id,
+            Status: status
         );
 
         Result result = await _sender.Send(update, cancellationToken);

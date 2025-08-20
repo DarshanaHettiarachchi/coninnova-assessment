@@ -22,18 +22,27 @@ internal sealed class UpdatePurchaseOrderCommandHandler : ICommandHandler<Update
             return Result.Failure(PurchaseOrderErrors.NotFound);
         }
 
+        if (po.Status != request.Status)
+        {
+            var statusResult = po.UpdateStatus(request.Status);
+            if (statusResult.IsFailure)
+            {
+                return statusResult;
+            }
+        }
+
         var totalAmount = new Money(request.TotalAmount);
 
-        po.Update(
+        var updateResult = po.Update(
             description: request.Description,
             totalAmount: totalAmount,
             supplierId: request.SupplierId,
             orderDate: request.OrderDate
         );
 
-        if (po.Status != request.Status)
+        if (updateResult.IsFailure)
         {
-            po.UpdateStatus(request.Status);
+            return updateResult;
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
