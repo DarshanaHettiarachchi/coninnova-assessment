@@ -26,6 +26,7 @@ import { SortDirection } from '@angular/material/sort';
 import { Result } from '../../shared/models/result.model';
 import { PaginatedResponse } from '../../shared/models/paginated-response.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { hasValue } from '../../utils/util';
 
 @Injectable({
   providedIn: 'root',
@@ -169,15 +170,17 @@ export class PurchaseOrderDataService {
 
   private toParams(query: PurchaseOrderQuery): HttpParams {
     let params = new HttpParams()
-      .set('page', query.page.toString())
-      .set('pageSize', query.pageSize.toString())
+      .set('page', query.page)
+      .set('pageSize', query.pageSize)
       .set('sortBy', query.sortBy)
       .set('sortDirection', query.sortDirection);
 
-    if (query.status) {
+    console.log('prams', query.status);
+
+    if (hasValue(query.status)) {
       params = params.set('status', query.status);
     }
-    if (query.supplierId) {
+    if (hasValue(query.supplierId)) {
       params = params.set('supplierId', query.supplierId);
     }
 

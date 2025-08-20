@@ -45,8 +45,8 @@ export class DataFiltersComponent {
           status:
             PurchaseOrderStatus[
               values.status as keyof typeof PurchaseOrderStatus
-            ] || '',
-          supplierId: values.supplier || '',
+            ],
+          supplierId: values.supplier,
         } as Partial<PurchaseOrderQuery>);
       }
     });
