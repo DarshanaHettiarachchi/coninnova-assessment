@@ -27,6 +27,7 @@ import { Result } from '../../shared/models/result.model';
 import { PaginatedResponse } from '../../shared/models/paginated-response.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { hasValue } from '../../utils/util';
+import { StateChangedRow } from '../ui/data-table/data-table.component';
 
 @Injectable({
   providedIn: 'root',
@@ -78,6 +79,20 @@ export class PurchaseOrderDataService {
   );
 
   private UpdatedResult = toSignal(this.updatedResult$, {
+    initialValue: { data: null } as Result<void>,
+  });
+
+  private pendingStateUpdate = signal<StateChangedRow | null>(null);
+
+  private pendingStateUpdate$ = toObservable(this.pendingStateUpdate);
+  private stateUpdatedResult$ = this.pendingStateUpdate$.pipe(
+    filter(Boolean),
+    debounceTime(300),
+    switchMap((ps) => {
+      return this.updateStatus(ps);
+    })
+  );
+  private StateUpdatedResult = toSignal(this.stateUpdatedResult$, {
     initialValue: { data: null } as Result<void>,
   });
 
@@ -175,8 +190,6 @@ export class PurchaseOrderDataService {
       .set('sortBy', query.sortBy)
       .set('sortDirection', query.sortDirection);
 
-    console.log('prams', query.status);
-
     if (hasValue(query.status)) {
       params = params.set('status', query.status);
     }
@@ -185,6 +198,11 @@ export class PurchaseOrderDataService {
     }
 
     return params;
+  }
+
+  queueForStateUpdate(event: StateChangedRow) {
+    this.pendingStateUpdate.set(event);
+    console.log('State change queued:', event);
   }
 
   private fetchPurchaseOrders(
@@ -262,6 +280,30 @@ export class PurchaseOrderDataService {
             success: false,
             data: null,
             error: 'Failed to save purchase order.',
+          } as Result<void>);
+        })
+      );
+  }
+
+  private updateStatus(ps: StateChangedRow): Observable<Result<void>> {
+    return this.http
+      .put<PurchaseOrderJson>(`${this.BASE_URL}/${ps.id}/status`, ps.status)
+      .pipe(
+        map(
+          (r) =>
+            ({
+              success: true,
+              data: null,
+            } as Result<void>)
+        ),
+        tap((p) => {
+          console.log(p.data);
+        }),
+        catchError((err) => {
+          return of({
+            success: false,
+            data: null,
+            error: 'Failed to save purchase order status.',
           } as Result<void>);
         })
       );

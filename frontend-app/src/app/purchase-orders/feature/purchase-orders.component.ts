@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   ColumnDef,
   DataTableComponent,
+  StateChangedRow,
 } from '../ui/data-table/data-table.component';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort, SortDirection } from '@angular/material/sort';
@@ -72,6 +73,7 @@ export class PurchaseOrdersComponent {
   }
 
   onFilterChange(event: Partial<PurchaseOrderQuery>) {
+    console.log('Filter event:', event);
     this.purchaseOrderDataService.setFilter({
       ...event,
     });
@@ -91,5 +93,8 @@ export class PurchaseOrdersComponent {
 
   onUpdatePO(event: updatePurchaseOrderRequest) {
     this.purchaseOrderDataService.queueForUpdate(event);
+  }
+  onChangeStatus(event: StateChangedRow) {
+    this.purchaseOrderDataService.queueForStateUpdate(event);
   }
 }

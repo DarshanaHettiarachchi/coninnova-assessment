@@ -15,6 +15,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { PurchaseOrderStatus } from '../../data-access/purchase-order.model';
 
+export interface StateChangedRow {
+  id: string;
+  status: PurchaseOrderStatus;
+}
+
+interface HasStatus {
+  id: string | number;
+  status: PurchaseOrderStatus;
+}
 export interface ColumnDef<T> {
   key: Extract<keyof T, string>;
   label: string;
@@ -49,7 +58,7 @@ export class DataTableComponent<T> {
   pageChange = output<PageEvent>();
   sortChange = output<Sort>();
   editRow = output<T>();
-  changeStatus = output<{ row: T; status: PurchaseOrderStatus }>();
+  changeStatus = output<StateChangedRow>();
 
   displayedColumns = computed(() => this.columns().map((c) => c.key as string));
 
@@ -71,9 +80,12 @@ export class DataTableComponent<T> {
     this.editRow.emit(row);
   }
 
-  onStatusChange(row: T, event: Event) {
-    const select = event.target as HTMLSelectElement;
-    const newStatus = select.value as PurchaseOrderStatus;
-    console.log('Selected status:', newStatus);
+  onStatusChange<T extends HasStatus>(row: T, event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const newStatus = target.value as PurchaseOrderStatus;
+    this.changeStatus.emit({
+      id: (row as any).id,
+      status: newStatus,
+    });
   }
 }
