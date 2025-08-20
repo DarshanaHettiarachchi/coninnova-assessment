@@ -6,11 +6,11 @@ export interface Money {
 }
 
 export enum PurchaseOrderStatus {
-  Draft = 0,
-  Approved = 1,
-  Shipped = 2,
-  Completed = 3,
-  Cancelled = 4,
+  Draft = 'Draft',
+  Approved = 'Approved',
+  Shipped = 'Shipped',
+  Completed = 'Completed',
+  Cancelled = 'Cancelled',
 }
 
 export class PurchaseOrder {
