@@ -287,7 +287,9 @@ export class PurchaseOrderDataService {
 
   private updateStatus(ps: StateChangedRow): Observable<Result<void>> {
     return this.http
-      .put<PurchaseOrderJson>(`${this.BASE_URL}/${ps.id}/status`, ps.status)
+      .put<PurchaseOrderJson>(`${this.BASE_URL}/${ps.id}/status`, {
+        status: ps.status,
+      })
       .pipe(
         map(
           (r) =>
