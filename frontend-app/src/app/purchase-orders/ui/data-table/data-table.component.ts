@@ -49,6 +49,7 @@ export class DataTableComponent<T> {
   pageChange = output<PageEvent>();
   sortChange = output<Sort>();
   editRow = output<T>();
+  changeStatus = output<{ row: T; status: PurchaseOrderStatus }>();
 
   displayedColumns = computed(() => this.columns().map((c) => c.key as string));
 
@@ -70,9 +71,9 @@ export class DataTableComponent<T> {
     this.editRow.emit(row);
   }
 
-  onStatusChange(row: T, x: any) {
-    // Handle status change logic here
-    console.log('Status changed for row:', row, 'to:', x);
-    // You can emit an event or call a service to update the status
+  onStatusChange(row: T, event: Event) {
+    const select = event.target as HTMLSelectElement;
+    const newStatus = select.value as PurchaseOrderStatus;
+    console.log('Selected status:', newStatus);
   }
 }
