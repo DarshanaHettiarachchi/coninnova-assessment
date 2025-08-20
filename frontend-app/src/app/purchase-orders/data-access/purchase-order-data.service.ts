@@ -28,6 +28,7 @@ import { PaginatedResponse } from '../../shared/models/paginated-response.model'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { hasValue } from '../../utils/util';
 import { StateChangedRow } from '../ui/data-table/data-table.component';
+import { HttpErrorService } from '../../utils/http-error.service';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +36,7 @@ import { StateChangedRow } from '../ui/data-table/data-table.component';
 export class PurchaseOrderDataService {
   private readonly BASE_URL = 'api/purchase-orders';
   private http = inject(HttpClient);
+  private errorService = inject(HttpErrorService);
   private snackBar = inject(MatSnackBar);
 
   private readonly purchaseOrderQuery = signal<PurchaseOrderQuery>(
@@ -93,7 +95,7 @@ export class PurchaseOrderDataService {
     })
   );
   private StateUpdatedResult = toSignal(this.stateUpdatedResult$, {
-    initialValue: { data: null } as Result<void>,
+    initialValue: null,
   });
 
   poAdded = computed(() => {
@@ -134,6 +136,30 @@ export class PurchaseOrderDataService {
   sortDirection = computed(() => {
     return this.purchaseOrderQuery().sortDirection;
   });
+
+  constructor() {
+    effect(() => {
+      const result = this.StateUpdatedResult();
+      if (result && result.error) {
+        this.snackBar.open(result.error, 'Close', {
+          duration: 5000,
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar'],
+        });
+      }
+      if (result && !result.error) {
+        this.snackBar.open(
+          'Purchase Order status updated successfully',
+          'Close',
+          {
+            duration: 5000,
+            verticalPosition: 'top',
+            panelClass: ['success-snackbar'],
+          }
+        );
+      }
+    });
+  }
 
   setPaging(pageIndex: number, pageSize: number) {
     this.purchaseOrderQuery.update((query) => ({
@@ -183,6 +209,11 @@ export class PurchaseOrderDataService {
     this.pendingUpdate.set(po);
   }
 
+  queueForStateUpdate(event: StateChangedRow) {
+    this.pendingStateUpdate.set(event);
+    console.log('State change queued:', event);
+  }
+
   private toParams(query: PurchaseOrderQuery): HttpParams {
     let params = new HttpParams()
       .set('page', query.page)
@@ -198,11 +229,6 @@ export class PurchaseOrderDataService {
     }
 
     return params;
-  }
-
-  queueForStateUpdate(event: StateChangedRow) {
-    this.pendingStateUpdate.set(event);
-    console.log('State change queued:', event);
   }
 
   private fetchPurchaseOrders(
@@ -305,7 +331,7 @@ export class PurchaseOrderDataService {
           return of({
             success: false,
             data: null,
-            error: 'Failed to save purchase order status.',
+            error: this.errorService.formatError(err),
           } as Result<void>);
         })
       );
